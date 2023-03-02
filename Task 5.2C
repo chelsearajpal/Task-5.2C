@@ -1,0 +1,72 @@
+from tkinter import*
+import tkinter.font
+from gpiozero import LED
+import RPi.GPIO
+RPi.GPIO.setmode(RPi.GPIO.BCM)
+
+## hardware
+red = LED(11)
+green = LED(8)
+white = LED(9)
+
+
+## GUI DEFINITIONS ##                                                                                                              
+win = Tk()
+win.title("LED LIGHTUP")
+ayFont = tkinter.font.Font(family = 'Helvetica',size = 12, weight = "bold")
+
+### EVENT FUNCTIONS ###
+def ledToggle():
+    if red.is_lit:
+        red.off()
+        redButton["text"] = "Turn red on"
+    else:
+            red.on()
+            white.off()
+            whiteButton["text"] = "Turn white off"
+            green.off()
+            greenButton["text"] = "Turn green on"
+            redButton["text"] = "Turn red off"
+
+def ledToggle1():
+    if green.is_lit:
+        green.off()
+        greenButton["text"] = "Turn green on"
+    else:
+            green.on()
+            white.off()
+            whiteButton["text"] = "Turn white on"
+            red.off()
+            redButton["text"] = "Turn red on"
+            greenButton["text"] = "Turn green off"
+
+def ledToggle2():
+    if white.is_lit:
+        white.off()
+        whiteButton["text"] = "Turn white on"
+    else:
+            white.on()
+            green.off()
+            greenButton["text"] = "Turn green on"
+            red.off()
+            redButton["text"] = "Turn red on"
+            whiteButton["text"] = "Turn white off"
+
+def close():
+     RPi.GPIO.cleanup()
+     win.destroy()
+
+### WIDGETS ###
+whiteButton = Button(win, text = 'turn WHITE LED on', font = ayFont, command = ledToggle2,bg = 'white', height = 3, width = 26)
+whiteButton.grid(row=0,column=0)
+redButton = Button(win, text = 'turn RED LED on', font = ayFont, command = ledToggle,bg = 'red', height = 3, width = 26)
+redButton.grid(row=1,column=0)
+greenButton = Button(win, text = 'turn GREEN LED on', font = ayFont, command = ledToggle1,bg = 'green', height = 3, width = 26)
+greenButton.grid(row=2,column=0)
+
+exitButton = Button(win, text = 'Exit', font = ayFont, command = close, bg = 'red', height = 1, width = 15)
+exitButton.grid(row=3,column=0)
+
+win.protocol("DELETE_WINDOW", close) # exit cleanly
+red.on()
+win.mainloop() # Loop forever
